@@ -10,10 +10,13 @@ for f in "$HOME"/Desktop/*.desktop; do
   chmod +x "$f"
   gio set -t string "$f" metadata::xfce-exe-checksum "$(sha256sum "$f" | cut -d' ' -f1)" 2>/dev/null
 done
-# Wallpaper on every monitor xfdesktop has seen.
+# Wallpaper: xfdesktop keys it by output name (VirtualBox: Virtual-1, QEMU: default), so set every output.
 sleep 3
-for p in $(xfconf-query -c xfce4-desktop -l 2>/dev/null | grep -E '/last-image$'); do
-  xfconf-query -c xfce4-desktop -p "$p" -s /usr/share/backgrounds/emberos.png
+W=/usr/share/backgrounds/emberos-default.jpg
+for mon in $(xrandr --query 2>/dev/null | awk '/ connected/{print $1}') default 0; do
+  b=/backdrop/screen0/monitor$mon/workspace0
+  xfconf-query -c xfce4-desktop -p $b/last-image -s "$W" 2>/dev/null || xfconf-query -c xfce4-desktop -p $b/last-image -n -t string -s "$W"
+  xfconf-query -c xfce4-desktop -p $b/image-style -s 5 2>/dev/null || xfconf-query -c xfce4-desktop -p $b/image-style -n -t int -s 5
 done
 xfdesktop --reload >/dev/null 2>&1 &
 touch "$flag"

@@ -4,19 +4,29 @@ set -e
 B=/home/claude/emberlinux; R=$B/chroot; A=$B/art/out
 cp -a $B/overlay/. $R/
 cp $B/overlay/etc/xdg/xfce4/panel-default.xml $R/etc/xdg/xfce4/panel/default.xml
-# Artwork
-for s in 16 24 32 48 64 128 256; do install -D -m644 $A/logo-$s.png $R/usr/share/icons/hicolor/${s}x${s}/apps/emberos.png; done
-install -D -m644 $A/wallpaper.png $R/usr/share/backgrounds/emberos.png
+# Artwork: flat logo icons; wallpaper is the "Clouds" community photo (CC BY-SA, Tibor Mokanszki)
+for s in 16 24 32 48 64 96 128 256; do install -D -m644 $A/logo-$s.png $R/usr/share/icons/hicolor/${s}x${s}/apps/emberos.png; done
 install -D -m644 $A/logo-128.png $R/usr/share/pixmaps/emberos.png
-# Default xfdesktop wallpaper -> ours (SVG wrapper around the PNG), via dpkg-divert so updates don't undo it
+rm -f $R/usr/share/backgrounds/emberos.png
+python3 - "$R" <<'PY'
+import sys
+from PIL import Image
+R = sys.argv[1]
+im = Image.open(R + '/usr/share/backgrounds/Clouds_by_Tibor_Mokanszki.jpg').convert('RGB')
+im.resize((2560, 1440), Image.LANCZOS).save(R + '/usr/share/backgrounds/emberos-default.jpg', quality=90)
+im.resize((1920, 1080), Image.LANCZOS).save('/tmp/emberos-wall-1080.jpg', quality=85)
+PY
+mkdir -p $R/usr/share/emberos
+printf 'Default wallpaper: "Clouds" by Tibor Mokanszki, CC BY-SA 4.0,\nfrom the Ubuntu 24.04 community wallpaper collection.\n' > $R/usr/share/emberos/CREDITS
+# Default xfdesktop wallpaper -> ours (SVG wrapper around the JPEG), via dpkg-divert so updates don't undo it
 S=/usr/share/backgrounds/xfce/xfce-shapes.svg
 chroot $R dpkg-divert --quiet --local --rename --add $S || true
-python3 - "$R$S" "$A/wallpaper.png" <<'PY'
+python3 - "$R$S" /tmp/emberos-wall-1080.jpg <<'PY'
 import base64, sys
 b = base64.b64encode(open(sys.argv[2], 'rb').read()).decode()
-open(sys.argv[1], 'w').write('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080" viewBox="0 0 1920 1080"><image width="1920" height="1080" xlink:href="data:image/png;base64,%s"/></svg>' % b)
+open(sys.argv[1], 'w').write('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080" viewBox="0 0 1920 1080"><image width="1920" height="1080" xlink:href="data:image/jpeg;base64,%s"/></svg>' % b)
 PY
-# Boot splash
+# Boot splash: flat logo + small wordmark
 P=$R/usr/share/plymouth
 install -m644 $A/watermark.png $P/themes/spinner/watermark.png
 install -m644 $A/splash-logo.png $P/themes/spinner/bgrt-fallback.png
