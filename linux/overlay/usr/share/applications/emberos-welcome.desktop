@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Welcome to EmberOS
+Comment=Tour of EmberOS
+Exec=ember-welcome
+Icon=emberos
+Categories=System;
+Terminal=false
+StartupNotify=true

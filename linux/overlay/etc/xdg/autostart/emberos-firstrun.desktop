@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=EmberOS first-run setup
+Exec=ember-firstrun
+NoDisplay=true
+OnlyShowIn=XFCE;

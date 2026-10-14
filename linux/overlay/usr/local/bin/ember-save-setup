@@ -1,0 +1,46 @@
+#!/bin/bash
+# Save My Files: turns an empty virtual disk into EmberOS's persistent storage (casper "writable" label).
+T="Save My Files"
+part=$(blkid -L writable 2>/dev/null)
+if [ -n "$part" ]; then
+  if [ -n "$(lsblk -no MOUNTPOINTS "$part" 2>/dev/null)" ] && grep -qw persistent /proc/cmdline; then
+    zenity --info --width=420 --title="$T" --text="<b>Saving is on.</b>\n\nYour files, settings and installed apps are kept on the disk between restarts."
+  else
+    zenity --info --width=420 --title="$T" --text="The save disk is ready.\n\nRestart EmberOS (choose <b>EmberOS</b> in the boot menu) to start saving."
+  fi
+  exit 0
+fi
+
+# Find an empty disk: no partitions and no filesystem.
+disk=""
+while read -r name type ro; do
+  [ "$type" = disk ] && [ "$ro" = 0 ] || continue
+  [ "$(lsblk -no NAME "/dev/$name" | wc -l)" = 1 ] || continue          # has partitions
+  [ -z "$(lsblk -no FSTYPE "/dev/$name" | tr -d ' ')" ] || continue      # has a filesystem
+  disk="/dev/$name"; break
+done < <(lsblk -dno NAME,TYPE,RO)
+
+if [ -z "$disk" ]; then
+  zenity --info --width=520 --title="$T" --text="<b>No empty disk found.</b>\n\nEmberOS runs from the CD image, so changes vanish when you restart. To keep them:\n\n1. Shut down EmberOS.\n2. In VirtualBox: <b>Settings › Storage</b>, click the controller, then <b>Adds hard disk</b> › <b>Create</b> (20 GB is plenty).\n3. Start EmberOS and open <b>Save My Files</b> again."
+  exit 0
+fi
+
+size=$(lsblk -dno SIZE "$disk" | tr -d ' ')
+zenity --question --width=460 --title="$T" --ok-label="Use this disk" --cancel-label="Cancel" \
+  --text="<b>Use the $size disk ($disk) to save your stuff?</b>\n\nYour files, settings and apps (like Chrome) will be kept between restarts.\n\nAnything already on that disk will be erased." || exit 0
+
+( set -e
+  echo "# Preparing the disk..."
+  echo 'type=83' | sudo -n sfdisk --label dos "$disk" >/dev/null
+  sudo -n partprobe "$disk" 2>/dev/null || true; sleep 2
+  p=$(lsblk -lnpo NAME,TYPE "$disk" | awk '$2=="part"{print $1; exit}')
+  echo "# Formatting $p..."
+  sudo -n mkfs.ext4 -F -q -L writable "$p"
+) | zenity --progress --pulsate --auto-close --no-cancel --width=420 --title="$T" --text="Preparing the disk..."
+
+if blkid -L writable >/dev/null 2>&1; then
+  zenity --question --width=420 --title="$T" --ok-label="Restart now" --cancel-label="Later" \
+    --text="<b>Done!</b>\n\nRestart EmberOS to start saving. Anything you do before restarting won't be kept." && sudo -n reboot
+else
+  zenity --error --width=400 --title="$T" --text="Setting up the disk failed."
+fi

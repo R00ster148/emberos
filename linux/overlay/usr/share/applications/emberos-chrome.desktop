@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Google Chrome
+Comment=Install and run Google Chrome
+Exec=ember-get-chrome
+Icon=google-chrome
+Categories=Network;WebBrowser;
+Terminal=false
+StartupNotify=true

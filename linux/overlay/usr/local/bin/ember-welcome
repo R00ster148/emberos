@@ -1,0 +1,9 @@
+#!/bin/sh
+zenity --info --width=520 --title="Welcome to EmberOS" --icon-name=emberos --ok-label="Let's go" --text="<big><b>Welcome to EmberOS 3.0</b></big>
+
+<b>Start</b> (bottom left) has all your apps. The <b>Windows key</b> opens it too.
+
+<b>Web Browser</b>: search with Google and watch YouTube.
+<b>Get Google Chrome</b>: installs the real Chrome browser.
+<b>Save My Files</b>: keeps your files and apps after a restart (needs a virtual disk).
+<b>EmberOS Classic</b>: the original from-scratch EmberOS, in a window."

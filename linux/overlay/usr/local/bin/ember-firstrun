@@ -1,0 +1,20 @@
+#!/bin/bash
+# Runs at each login; does the one-time setup the first time.
+flag="$HOME/.config/emberos/firstrun-done"
+[ -e "$flag" ] && exit 0
+mkdir -p "$(dirname "$flag")"
+xdg-user-dirs-update 2>/dev/null
+# Desktop launchers: mark executable and trusted so xfdesktop runs them without a warning.
+for f in "$HOME"/Desktop/*.desktop; do
+  [ -e "$f" ] || continue
+  chmod +x "$f"
+  gio set -t string "$f" metadata::xfce-exe-checksum "$(sha256sum "$f" | cut -d' ' -f1)" 2>/dev/null
+done
+# Wallpaper on every monitor xfdesktop has seen.
+sleep 3
+for p in $(xfconf-query -c xfce4-desktop -l 2>/dev/null | grep -E '/last-image$'); do
+  xfconf-query -c xfce4-desktop -p "$p" -s /usr/share/backgrounds/emberos.png
+done
+xfdesktop --reload >/dev/null 2>&1 &
+touch "$flag"
+ember-welcome &

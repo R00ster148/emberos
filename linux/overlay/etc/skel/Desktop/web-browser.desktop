@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Web Browser
+Comment=Search the web and watch videos
+Exec=epiphany %U
+Icon=org.gnome.Epiphany
+Terminal=false

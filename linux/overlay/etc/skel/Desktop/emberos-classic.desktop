@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=EmberOS Classic
+Comment=The original from-scratch EmberOS, in a window
+Exec=ember-classic
+Icon=emberos
+Categories=System;Game;
+Terminal=false
+StartupNotify=true

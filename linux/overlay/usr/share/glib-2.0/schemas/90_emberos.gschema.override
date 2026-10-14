@@ -1,0 +1,7 @@
+[org.gnome.Epiphany]
+default-search-engine='Google'
+homepage-url='https://www.google.com/'
+ask-for-default=false
+
+[org.gnome.Epiphany.web]
+enable-autosearch=true

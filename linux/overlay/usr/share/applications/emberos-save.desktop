@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Save My Files
+Comment=Keep your files and apps between restarts
+Exec=ember-save-setup
+Icon=drive-harddisk
+Categories=System;Settings;
+Terminal=false
+StartupNotify=true

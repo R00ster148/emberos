@@ -1,0 +1,4 @@
+#!/bin/sh
+# EmberOS Classic: the original from-scratch EmberOS, running in a virtual machine window.
+exec qemu-system-i386 -name "EmberOS Classic" -m 64 -cdrom /usr/share/emberos/emberos-classic.iso -boot d \
+  -nic user,model=e1000 -display gtk,zoom-to-fit=on,show-menubar=off -no-user-config

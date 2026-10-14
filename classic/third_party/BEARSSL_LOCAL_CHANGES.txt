@@ -1,0 +1,6 @@
+BearSSL 0.6, taken from https://github.com/arduino-libraries/ArduinoBearSSL (src/bearssl).
+The Arduino-specific parts are only active when ARDUINO is defined, which EmberOS does not do.
+
+Local change for EmberOS:
+- inner.h: the CPU-intrinsics include block is skipped when BR_NO_INTRINSICS is defined
+  (EmberOS builds with no SSE/AES-NI/RDRAND code and no C library headers).

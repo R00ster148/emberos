@@ -1,0 +1,32 @@
+#!/bin/bash
+# Get Google Chrome: downloads Google's official .deb and installs it.
+if command -v google-chrome-stable >/dev/null 2>&1; then exec google-chrome-stable "$@"; fi
+
+zenity --question --title="Get Google Chrome" --width=460 --icon-name=google-chrome \
+  --ok-label="Install Chrome" --cancel-label="Not now" \
+  --text="<b>Install Google Chrome?</b>\n\nThis downloads Chrome from google.com (about 120 MB) and installs it.\n\nBy installing it you agree to Google's terms:\nhttps://www.google.com/chrome/terms/" || exit 0
+
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+url=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
+wget --progress=dot:mega -O "$tmp/chrome.deb" "$url" 2>&1 \
+  | sed -un 's/.* \([0-9]\{1,3\}\)%.*/\1/p' \
+  | zenity --progress --auto-close --title="Get Google Chrome" --width=420 --text="Downloading Google Chrome..." --percentage=0
+if ! dpkg-deb --info "$tmp/chrome.deb" >/dev/null 2>&1; then
+  zenity --error --width=400 --title="Get Google Chrome" --text="The download didn't work. Check the internet connection and try again."
+  exit 1
+fi
+
+( sudo -n apt-get update >"$tmp/log" 2>&1; sudo -n apt-get install -y "$tmp/chrome.deb" >>"$tmp/log" 2>&1; echo $? >"$tmp/rc" ) \
+  | zenity --progress --pulsate --auto-close --no-cancel --title="Get Google Chrome" --width=420 --text="Installing Google Chrome..."
+if [ "$(cat "$tmp/rc" 2>/dev/null)" != 0 ]; then
+  zenity --error --width=500 --title="Get Google Chrome" --text="Installing failed:\n\n$(tail -n 6 "$tmp/log" | sed 's/[<>&]/ /g')"
+  exit 1
+fi
+
+xdg-settings set default-web-browser google-chrome.desktop 2>/dev/null
+if [ -z "$(lsblk -no MOUNTPOINTS "$(blkid -L writable 2>/dev/null)" 2>/dev/null)" ]; then
+  notify-send -i google-chrome "Google Chrome installed" "Tip: use 'Save My Files' so Chrome is still here after a restart."
+fi
+exec google-chrome-stable
