@@ -4,7 +4,7 @@ Two editions:
 
 - **EmberOS 3.0 (Linux edition)** - a Windows-style desktop built on Ubuntu 24.04: Start menu and
   taskbar, GNOME Web browser with video codecs, one-click real Google Chrome install, "Save My Files"
-  persistence, and EmberOS Classic built in. **Download the ISO from the Releases page.**
+  persistence, and EmberOS Classic built in. **Download:** Code > Download ZIP, unzip, open the `download` folder and double-click `JOIN-ME.bat` - it builds `emberos-3.0.iso` (761 MB).
 - **EmberOS Classic** (`classic/`) - the original OS written from scratch: own bootloader and kernel,
   network drivers, TCP/IP, HTTPS (BearSSL), text web browser, Snake.
 
