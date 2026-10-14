@@ -1,0 +1,28 @@
+desktop-image: "background.png"
+title-text: ""
+terminal-font: "Unifont Regular 16"
++ boot_menu {
+  left = 22%
+  top = 46%
+  width = 56%
+  height = 36%
+  item_font = "Unifont Regular 16"
+  item_color = "#d9cfc9"
+  selected_item_color = "#ffffff"
+  item_height = 30
+  item_padding = 10
+  item_spacing = 6
+  selected_item_pixmap_style = "select_*.png"
+  scrollbar = false
+}
++ label {
+  top = 90%
+  left = 0
+  width = 100%
+  height = 20
+  align = "center"
+  id = "__timeout__"
+  text = "Starting EmberOS in %d seconds"
+  color = "#ffb070"
+  font = "Unifont Regular 16"
+}
