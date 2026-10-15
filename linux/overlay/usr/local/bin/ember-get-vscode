@@ -1,0 +1,19 @@
+#!/bin/bash
+# Get Visual Studio Code: downloads Microsoft's official .deb and installs it.
+if command -v code >/dev/null 2>&1; then exec code "$@"; fi
+zenity --question --title="Get Visual Studio Code" --width=460 --icon-name=visual-studio-code \
+  --ok-label="Install VS Code" --cancel-label="Not now" \
+  --text="<b>Install Visual Studio Code?</b>\n\nThis downloads VS Code from Microsoft (about 100 MB) and installs it.\n\nBy installing it you agree to Microsoft's licence terms:\nhttps://code.visualstudio.com/license" || exit 0
+tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
+wget --progress=dot:mega -O "$tmp/code.deb" "https://update.code.visualstudio.com/latest/linux-deb-x64/stable" 2>&1 \
+  | sed -un 's/.* \([0-9]\{1,3\}\)%.*/\1/p' \
+  | zenity --progress --auto-close --title="Get Visual Studio Code" --width=420 --text="Downloading VS Code..." --percentage=0
+if ! dpkg-deb --info "$tmp/code.deb" >/dev/null 2>&1; then
+  zenity --error --width=400 --title="Get Visual Studio Code" --text="The download didn't work. Check the internet connection and try again."; exit 1
+fi
+( sudo -n apt-get update >"$tmp/log" 2>&1; sudo -n apt-get install -y "$tmp/code.deb" >>"$tmp/log" 2>&1; echo $? >"$tmp/rc" ) \
+  | zenity --progress --pulsate --auto-close --no-cancel --title="Get Visual Studio Code" --width=420 --text="Installing VS Code..."
+if [ "$(cat "$tmp/rc" 2>/dev/null)" != 0 ]; then
+  zenity --error --width=500 --title="Get Visual Studio Code" --text="Installing failed:\n\n$(tail -n 6 "$tmp/log" | sed 's/[<>&]/ /g')"; exit 1
+fi
+exec code

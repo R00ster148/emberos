@@ -1,8 +1,13 @@
 #!/bin/sh
-zenity --info --width=460 --title="Welcome" --icon-name=emberos --ok-label="Close" --text="<b>Welcome to EmberOS 3.0</b>
+zenity --info --width=500 --title="Welcome" --icon-name=emberos --ok-label="Close" --text="<b>Welcome to EmberOS 3.1</b>
 
 Your apps are in the Start menu, bottom left. The Windows key opens it too.
 
-<b>Google Chrome</b> downloads and installs Chrome the first time you open it.
+<b>App Store</b> has thousands of free apps.
+<b>Google Chrome</b> and <b>Visual Studio Code</b> install the first time you open them.
 <b>Save My Files</b> keeps your files and apps after a restart. It needs a virtual hard disk.
-<b>EmberOS Classic</b> runs the original EmberOS in a window."
+
+<b>Shortcuts</b>
+Windows key + V: clipboard history        Windows key + .: emoji
+Windows key + Shift + S: screenshot        F12: drop-down terminal
+Windows key + Left/Right: snap a window    Ctrl + Shift + Esc: Task Manager"

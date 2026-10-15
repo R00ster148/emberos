@@ -1,0 +1,8 @@
+#!/bin/sh
+# Runs at every login, in the background.
+if ! flatpak remotes --user 2>/dev/null | grep -q '^flathub'; then
+  for i in 1 2 3 4 5 6; do
+    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo 2>/dev/null && break
+    sleep 20
+  done
+fi

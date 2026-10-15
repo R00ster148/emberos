@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=EmberOS login tasks
+Exec=ember-login
+NoDisplay=true
+OnlyShowIn=XFCE;

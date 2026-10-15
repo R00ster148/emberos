@@ -5,3 +5,12 @@ ask-for-default=false
 
 [org.gnome.Epiphany.web]
 enable-autosearch=true
+
+[org.gnome.software]
+first-run=false
+download-updates=false
+download-updates-notify=false
+allow-updates=false
+
+[com.github.maoschanz.drawing]
+last-version='1.0.2'

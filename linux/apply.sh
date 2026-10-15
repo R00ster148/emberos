@@ -34,15 +34,74 @@ install -m644 $A/splash-logo.png $P/ubuntu-logo.png
 # EmberOS Classic disk image
 install -D -m644 /home/claude/emberos/build/emberos.iso $R/usr/share/emberos/emberos-classic.iso
 # Name and version
-sed -i -e 's/^NAME=.*/NAME="EmberOS"/' -e 's/^PRETTY_NAME=.*/PRETTY_NAME="EmberOS 3.0 (based on Ubuntu 24.04 LTS)"/' $R/usr/lib/os-release
-grep -q '^VARIANT=' $R/usr/lib/os-release || echo 'VARIANT="EmberOS 3.0"' >> $R/usr/lib/os-release
-sed -i 's/^DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION="EmberOS 3.0"/' $R/etc/lsb-release
-printf 'EmberOS 3.0 \\n \\l\n\n' > $R/etc/issue
+sed -i -e 's/^NAME=.*/NAME="EmberOS"/' -e 's/^PRETTY_NAME=.*/PRETTY_NAME="EmberOS 3.1 (based on Ubuntu 24.04 LTS)"/' $R/usr/lib/os-release
+grep -q '^VARIANT=' $R/usr/lib/os-release || echo 'VARIANT="EmberOS 3.1"' >> $R/usr/lib/os-release
+sed -i 's/^DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION="EmberOS 3.1"/' $R/etc/lsb-release
+printf 'EmberOS 3.1 \\n \\l\n\n' > $R/etc/issue
 # Windows key opens the Start menu
 K=$R/etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml
 grep -q 'name="Super_L"' $K || sed -i '0,/<property name="default" type="empty">/s//&\n      <property name="Super_L" type="string" value="xfce4-popup-whiskermenu"\/>/' $K
 # VirtualBox-friendly WebKit rendering
 grep -q WEBKIT_DISABLE_DMABUF_RENDERER $R/etc/environment || echo 'WEBKIT_DISABLE_DMABUF_RENDERER=1' >> $R/etc/environment
+# Friendlier app names / hidden entries (overrides in /usr/local/share/applications win over /usr/share)
+python3 - "$R" "$B/renames.txt" <<'PY'
+import os, re, sys
+R, lst = sys.argv[1], sys.argv[2]
+dst = R + '/usr/local/share/applications'; os.makedirs(dst, exist_ok=True)
+for line in open(lst):
+    line = line.strip()
+    if not line: continue
+    f, name, comment = line.split('|')
+    src = None
+    for d in ('/usr/local/share/applications', '/usr/share/applications'):
+        if d == '/usr/local/share/applications' and os.path.exists(R + '/usr/share/applications/' + f): continue
+        if os.path.exists(R + d + '/' + f): src = R + d + '/' + f; break
+    if not src: print('  (missing', f, ')'); continue
+    out, in_main = [], False
+    for l in open(src, encoding='utf-8'):
+        if l.startswith('['): in_main = l.strip() == '[Desktop Entry]'
+        if in_main and name != '-' and re.match(r'(Name|GenericName|Comment|Keywords|X-GNOME-FullName)(\[[^]]*\])?=', l): continue
+        if in_main and re.match(r'NoDisplay=', l): continue
+        out.append(l)
+        if l.strip() == '[Desktop Entry]':
+            if name == '-': out.append('NoDisplay=true\n')
+            else: out.append(f'Name={name}\nComment={comment}\n')
+    open(dst + '/' + f, 'w', encoding='utf-8').write(''.join(out))
+PY
+# Windows-style keyboard shortcuts
+python3 - "$R/etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml" <<'PY'
+import sys, xml.etree.ElementTree as ET
+p = sys.argv[1]; t = ET.parse(p); root = t.getroot()
+def section(group):
+    g = root.find(f"./property[@name='{group}']/property[@name='default']")
+    return g
+cmds = {
+  'Super_L': 'xfce4-popup-whiskermenu',
+  '<Super>e': 'thunar',
+  '<Super>r': 'xfce4-appfinder -c',
+  '<Super>i': 'xfce4-settings-manager',
+  '<Super>v': 'xfce4-popup-clipman',
+  '<Super>period': 'gnome-characters',
+  '<Super><Shift>s': 'xfce4-screenshooter -r',
+  '<Primary><Shift>Escape': 'xfce4-taskmanager',
+  'F12': 'xfce4-terminal --drop-down',
+  '<Super>l': 'xflock4',
+}
+wm = {
+  '<Super>d': 'show_desktop_key',
+  '<Super>Left': 'tile_left_key',
+  '<Super>Right': 'tile_right_key',
+  '<Super>Up': 'maximize_window_key',
+  '<Super>Down': 'hide_window_key',
+  '<Alt>F4': 'close_window_key',
+}
+for group, table in (('commands', cmds), ('xfwm4', wm)):
+    g = section(group)
+    for k, v in table.items():
+        for old in g.findall(f"./property[@name='{k}']"): g.remove(old)
+        ET.SubElement(g, 'property', name=k, type='string', value=v)
+t.write(p, encoding='UTF-8', xml_declaration=True)
+PY
 # In-chroot steps
 $B/enter.sh '
 set -e

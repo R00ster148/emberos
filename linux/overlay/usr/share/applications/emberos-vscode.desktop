@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Visual Studio Code
+Comment=Install and run VS Code
+Exec=ember-get-vscode
+Icon=visual-studio-code
+Categories=Development;IDE;
+Terminal=false
+StartupNotify=true

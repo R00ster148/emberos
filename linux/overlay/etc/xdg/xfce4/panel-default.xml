@@ -36,7 +36,7 @@
       <property name="show-button-title" type="bool" value="true"/>
       <property name="show-button-icon" type="bool" value="true"/>
       <property name="menu-width" type="int" value="560"/>
-      <property name="menu-height" type="int" value="520"/>
+      <property name="menu-height" type="int" value="580"/>
       <property name="menu-opacity" type="int" value="96"/>
       <property name="position-search-alternate" type="bool" value="true"/>
       <property name="position-commands-alternate" type="bool" value="true"/>
@@ -44,13 +44,17 @@
         <value type="string" value="org.gnome.Epiphany.desktop"/>
         <value type="string" value="emberos-chrome.desktop"/>
         <value type="string" value="thunar.desktop"/>
+        <value type="string" value="org.gnome.Software.desktop"/>
+        <value type="string" value="libreoffice-writer.desktop"/>
+        <value type="string" value="libreoffice-calc.desktop"/>
+        <value type="string" value="vlc.desktop"/>
+        <value type="string" value="com.github.maoschanz.drawing.desktop"/>
+        <value type="string" value="emberos-vscode.desktop"/>
         <value type="string" value="xfce4-terminal.desktop"/>
-        <value type="string" value="emberos-classic.desktop"/>
-        <value type="string" value="emberos-save.desktop"/>
-        <value type="string" value="org.xfce.Parole.desktop"/>
-        <value type="string" value="org.gnome.Mines.desktop"/>
         <value type="string" value="org.gnome.Calculator.desktop"/>
         <value type="string" value="xfce-settings-manager.desktop"/>
+        <value type="string" value="emberos-classic.desktop"/>
+        <value type="string" value="emberos-save.desktop"/>
       </property>
     </property>
     <property name="plugin-2" type="string" value="separator">

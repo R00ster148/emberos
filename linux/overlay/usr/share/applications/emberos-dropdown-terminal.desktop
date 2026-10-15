@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Drop-down Terminal
+Comment=A terminal that slides down from the top of the screen (F12)
+Exec=xfce4-terminal --drop-down
+Icon=utilities-terminal
+Categories=System;TerminalEmulator;
+Terminal=false

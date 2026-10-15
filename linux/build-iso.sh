@@ -1,5 +1,5 @@
 #!/bin/bash
-# Packs the chroot into a hybrid BIOS/UEFI live ISO: out/emberos-3.0.iso
+# Packs the chroot into a hybrid BIOS/UEFI live ISO: out/emberos-3.1.iso
 set -e
 B=/home/claude/emberlinux; R=$B/chroot; I=$B/iso
 K=$(ls $R/boot/vmlinuz-* | sort -V | tail -1 | sed 's|.*/vmlinuz-||')
@@ -15,5 +15,5 @@ mksquashfs $R $I/casper/filesystem.squashfs -noappend -comp zstd -Xcompression-l
   -wildcards -e 'proc/*' 'sys/*' 'dev/*' 'run/*' 'tmp/*' >/dev/null
 du -sx --block-size=1 $R | cut -f1 > $I/casper/filesystem.size
 mkdir -p $B/out
-grub-mkrescue -o $B/out/emberos-3.0.iso $I -- -volid EMBEROS_3 2>&1 | grep -v "^xorriso : UPDATE\|^Drive current\|^Media current\|^Media status\|^Media summary\|^Added to ISO\|^xorriso : NOTE" || true
-ls -la $B/out/emberos-3.0.iso
+grub-mkrescue -o $B/out/emberos-3.1.iso $I -- -volid EMBEROS_31 2>&1 | grep -v "^xorriso : UPDATE\|^Drive current\|^Media current\|^Media status\|^Media summary\|^Added to ISO\|^xorriso : NOTE" || true
+ls -la $B/out/emberos-3.1.iso

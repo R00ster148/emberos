@@ -1,0 +1,36 @@
+com.github.maoschanz.drawing.desktop|Paint|Draw and edit pictures
+org.gnome.Software.desktop|App Store|Install free apps
+org.gnome.DiskUtility.desktop|Disks|Format and manage drives
+org.gnome.baobab.desktop|Disk Space Map|See what is using your disk space
+org.gnome.Characters.desktop|Emoji & Symbols|Find and copy emoji and special characters (Windows key + .)
+org.keepassxc.KeePassXC.desktop|Passwords|Keep your passwords safe (KeePassXC)
+simplescreenrecorder.desktop|Screen Recorder|Record your screen to a video
+org.bleachbit.BleachBit.desktop|Cleaner|Free up space and clear history (BleachBit)
+hardinfo.desktop|System Information|Hardware details and benchmarks
+xpad.desktop|Sticky Notes|Notes that stay on your desktop
+atril.desktop|PDF Viewer|Read PDF documents
+geany.desktop|Code Editor|Lightweight programming editor (Geany)
+transmission-gtk.desktop|Torrents|Download torrents (Transmission)
+vlc.desktop|VLC Media Player|Play any video or music file
+thunar.desktop|Files|Browse your files
+xfce4-taskmanager.desktop|Task Manager|See and stop running programs (Ctrl+Shift+Esc)
+xfce-settings-manager.desktop|Settings|Change how EmberOS looks and works (Windows key + I)
+xfce4-screenshooter.desktop|Snipping Tool|Take screenshots (Windows key + Shift + S)
+xfce4-clipman.desktop|Clipboard History|Everything you've copied (Windows key + V)
+org.xfce.mousepad.desktop|Notepad|Simple text editor
+xfce4-terminal.desktop|Terminal|Command line
+org.gnome.Epiphany.desktop|Web Browser|Browse the web and watch videos
+org.gnome.Calculator.desktop|Calculator|Calculator
+org.xfce.ristretto.desktop|Photos|View pictures
+software-properties-livepatch.desktop|-|-
+software-properties-drivers.desktop|-|-
+bleachbit-root.desktop|-|-
+libreoffice-startcenter.desktop|-|-
+libreoffice-draw.desktop|-|-
+org.xfce.Parole.desktop|-|-
+xfce4-appfinder.desktop|-|-
+thunar-bulk-rename.desktop|-|-
+org.xfce.mousepad-settings.desktop|-|-
+xfce4-terminal-settings.desktop|-|-
+thunar-settings.desktop|-|-
+thunar-volman-settings.desktop|-|-
