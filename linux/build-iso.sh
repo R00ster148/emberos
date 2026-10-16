@@ -7,6 +7,7 @@ K=$(ls $R/boot/vmlinuz-* | sort -V | tail -1 | sed 's|.*/vmlinuz-||')
 $B/enter.sh 'apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/install.log; : > /etc/machine-id; rm -f /var/lib/dbus/machine-id; find /var/log -type f -delete'
 for m in run dev/pts dev sys proc; do umount -l $R/$m 2>/dev/null || true; done
 rm -f $R/etc/resolv.conf
+ln -s ../run/systemd/resolve/stub-resolv.conf $R/etc/resolv.conf   # standard Ubuntu: systemd-resolved, fed by NetworkManager
 grep -rqsiE 'proxy|42977' $R/etc/apt $R/etc/environment $R/etc/profile.d && { echo "ERROR: proxy setting found in image"; exit 1; }
 cp $R/boot/vmlinuz-$K $I/casper/vmlinuz
 cp $R/boot/initrd.img-$K $I/casper/initrd

@@ -20,7 +20,7 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
-echo Checking the file (should end in ...bdfee14):
+echo Checking the file (should end in ...2385fcc):
 certutil -hashfile emberos-3.1.iso SHA256
 echo.
 echo Done! emberos-3.1.iso is in: %CD%
